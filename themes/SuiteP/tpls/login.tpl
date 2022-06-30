@@ -48,12 +48,6 @@
 <!-- Start login container -->
 
 <div class="p_login">
-
-	<div class="p_login_top">
-		
-		<a title="SuiteCRM" href="https://www.suitecrm.com">SuiteCRM</a>
-		
-	</div>
     
     <div class="p_login_middle">
         {if $LOGIN_ERROR_MESSAGE}
@@ -146,13 +140,7 @@
     </div>
     </div>
     
-    <div class="p_login_bottom">
 
-    		<a id="admin_options">&copy; Supercharged by SuiteCRM</a>
-            <a id="powered_by">&copy; Powered By SugarCRM</a>
-    	
-	</div>
-    
 </div>
 <!-- End login container -->
 
