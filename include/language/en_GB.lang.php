@@ -102,8 +102,8 @@ $app_list_strings = array(
         'TrackerQueries' => 'Tracker Queries',
         'FAQ' => 'FAQ',
         'Newsletters' => 'Newsletters',
-        'SugarFeed' => 'SuiteCRM Feed',
-        'SugarFavorites' => 'SuiteCRM Favourites',
+        'SugarFeed' => ' Feed',
+        'SugarFavorites' => ' Favourites',
 
         'OAuthKeys' => 'OAuth Consumer Keys',
         'OAuthTokens' => 'OAuth Tokens',
@@ -139,7 +139,7 @@ $app_list_strings = array(
         'Documents' => 'Document',
         'Sync' => 'Sync',
         'Users' => 'User',
-        'SugarFavorites' => 'SuiteCRM Favourites',
+        'SugarFavorites' => ' Favourites',
 
     ),
 
