@@ -3523,7 +3523,7 @@ $app_strings['LBL_COLLECTION_TYPE'] = 'Type';
 
 $app_strings['LBL_ADD_TAB'] = 'Ajouter un onglet';
 $app_strings['LBL_EDIT_TAB'] = 'Modifier les onglets';
-$app_strings['LBL_SUITE_DASHBOARD'] = 'Tableau de bord CRM';
+$app_strings['LBL_SUITE_DASHBOARD'] = 'Tableau de bord';
 $app_strings['LBL_ENTER_DASHBOARD_NAME'] = 'Entrer le nom du tableau de bord :';
 $app_strings['LBL_NUMBER_OF_COLUMNS'] = 'Nombre de colonnes :';
 $app_strings['LBL_DELETE_DASHBOARD1'] = 'Etes-vous sûr de vouloir effacer ce';
