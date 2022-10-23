@@ -1,6 +1,20 @@
 <?php 
 $GLOBALS["tabStructure"] =array (
-  
+  'LBL_TABGROUP_SALES' => 
+  array (
+    'label' => 'LBL_TABGROUP_SALES',
+    'modules' => 
+    array (
+      0 => 'Home',
+      1 => 'Accounts',
+      2 => 'Contacts',
+      3 => 'Opportunities',
+      4 => 'Leads',
+      5 => 'Contracts',
+      6 => 'Quotes',
+      7 => 'Forecasts',
+    ),
+  ),
   'LBL_TABGROUP_MARKETING' => 
   array (
     'label' => 'LBL_TABGROUP_MARKETING',
@@ -9,9 +23,10 @@ $GLOBALS["tabStructure"] =array (
       0 => 'Home',
       1 => 'Accounts',
       2 => 'Contacts',
-      3 => 'Campaigns',
-      4 => 'Prospects',
-      5 => 'ProspectLists',
+      3 => 'Leads',
+      4 => 'Campaigns',
+      5 => 'Prospects',
+      6 => 'ProspectLists',
     ),
   ),
   'LBL_TABGROUP_SUPPORT' => 
@@ -39,8 +54,8 @@ $GLOBALS["tabStructure"] =array (
       5 => 'Tasks',
       6 => 'Notes',
     ),
-    
-  ), 'LBL_TABGROUP_COLLABORATION' => 
+  ),
+  'LBL_TABGROUP_COLLABORATION' => 
   array (
     'label' => 'LBL_TABGROUP_COLLABORATION',
     'modules' => 
@@ -51,6 +66,4 @@ $GLOBALS["tabStructure"] =array (
       3 => 'Project',
     ),
   ),
-
- 
 );
