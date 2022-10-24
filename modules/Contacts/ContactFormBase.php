@@ -444,30 +444,27 @@ EOQ;
         $api        = new MauticApi();
         $apiUrl = "https://mautic.your-bridges.com/api";
         $contactApi = $api->newApi('contacts', $auth, $apiUrl);
-        $contacts = $contactApi->getList();
-        var_dump($contacts);
-        /*
+
         global $timedate;
 
         $focus = $this->getContact();
-        
-         
+
         if ($useRequired &&  !checkRequired($prefix, array_keys($focus->required_fields))) {
             return null;
         }
 
-        if (!empty($_POST[$prefix.'new_reports_to_id'])) {
-            $focus->retrieve($_POST[$prefix.'new_reports_to_id']);
-            $focus->reports_to_id = $_POST[$prefix.'record'];
+        if (!empty($_POST[$prefix . 'new_reports_to_id'])) {
+            $focus->retrieve($_POST[$prefix . 'new_reports_to_id']);
+            $focus->reports_to_id = $_POST[$prefix . 'record'];
         } else {
             $focus = populateFromPost($prefix, $focus);
-            if (isset($_POST[$prefix.'old_portal_password']) && !empty($focus->portal_password) && $focus->portal_password != $_POST[$prefix.'old_portal_password']) {
+            if (isset($_POST[$prefix . 'old_portal_password']) && !empty($focus->portal_password) && $focus->portal_password != $_POST[$prefix . 'old_portal_password']) {
                 $focus->portal_password = User::getPasswordHash($focus->portal_password);
             }
-            if (!isset($_POST[$prefix.'email_opt_out'])) {
+            if (!isset($_POST[$prefix . 'email_opt_out'])) {
                 $focus->email_opt_out = 0;
             }
-            if (!isset($_POST[$prefix.'do_not_call'])) {
+            if (!isset($_POST[$prefix . 'do_not_call'])) {
                 $focus->do_not_call = 0;
             }
         }
@@ -476,7 +473,7 @@ EOQ;
             sugar_cleanup(true);
         }
         if ($_REQUEST['action'] != 'ConvertLead' && $_REQUEST['action'] != 'ConvertProspect') {
-            if (!empty($_POST[$prefix.'sync_contact']) || !empty($focus->sync_contact)) {
+            if (!empty($_POST[$prefix . 'sync_contact']) || !empty($focus->sync_contact)) {
                 $focus->contacts_users_id = $current_user->id;
             } else {
                 if (!isset($focus->users)) {
@@ -497,37 +494,37 @@ EOQ;
         if (empty($_POST['record']) && empty($_POST['dup_checked'])) {
             $duplicateContacts = $this->checkForDuplicates($prefix);
             if (isset($duplicateContacts)) {
-                $location='module=Contacts&action=ShowDuplicates';
+                $location = 'module=Contacts&action=ShowDuplicates';
                 $get = '';
                 if (isset($_POST['inbound_email_id']) && !empty($_POST['inbound_email_id'])) {
-                    $get .= '&inbound_email_id='.$_POST['inbound_email_id'];
+                    $get .= '&inbound_email_id=' . $_POST['inbound_email_id'];
                 }
 
                 // Bug 25311 - Add special handling for when the form specifies many-to-many relationships
                 if (isset($_POST['relate_to']) && !empty($_POST['relate_to'])) {
-                    $get .= '&Contactsrelate_to='.$_POST['relate_to'];
+                    $get .= '&Contactsrelate_to=' . $_POST['relate_to'];
                 }
                 if (isset($_POST['relate_id']) && !empty($_POST['relate_id'])) {
-                    $get .= '&Contactsrelate_id='.$_POST['relate_id'];
+                    $get .= '&Contactsrelate_id=' . $_POST['relate_id'];
                 }
 
                 //add all of the post fields to redirect get string
                 foreach ($focus->column_fields as $field) {
                     if (!empty($focus->$field) && !is_object($focus->$field)) {
-                        $get .= "&Contacts$field=".urlencode($focus->$field);
+                        $get .= "&Contacts$field=" . urlencode($focus->$field);
                     }
                 }
 
                 foreach ($focus->additional_column_fields as $field) {
                     if (!empty($focus->$field)) {
-                        $get .= "&Contacts$field=".urlencode($focus->$field);
+                        $get .= "&Contacts$field=" . urlencode($focus->$field);
                     }
                 }
 
                 if ($focus->hasCustomFields()) {
-                    foreach ($focus->field_defs as $name=>$field) {
+                    foreach ($focus->field_defs as $name => $field) {
                         if (!empty($field['source']) && $field['source'] == 'custom_fields') {
-                            $get .= "&Contacts$name=".urlencode($focus->$name);
+                            $get .= "&Contacts$name=" . urlencode($focus->$name);
                         }
                     }
                 }
@@ -538,9 +535,9 @@ EOQ;
 
 
                 //create list of suspected duplicate contact id's in redirect get string
-                $i=0;
+                $i = 0;
                 foreach ($duplicateContacts as $contact) {
-                    $get .= "&duplicate[$i]=".$contact['id'];
+                    $get .= "&duplicate[$i]=" . $contact['id'];
                     $i++;
                 }
 
@@ -551,7 +548,7 @@ EOQ;
                         $urlData[$var] = $_POST[$var];
                     }
                 }
-                $get .= "&".http_build_query($urlData);
+                $get .= "&" . http_build_query($urlData);
                 $_SESSION['SHOW_DUPLICATES'] = $get;
 
                 //now redirect the post to modules/Contacts/ShowDuplicates.php
@@ -564,7 +561,7 @@ EOQ;
                         echo "<script>SUGAR.ajaxUI.loadContent('index.php?$location');</script>";
                     } else {
                         if (!empty($_POST['to_pdf'])) {
-                            $location .= '&to_pdf='.urlencode($_POST['to_pdf']);
+                            $location .= '&to_pdf=' . urlencode($_POST['to_pdf']);
                         }
                         header("Location: index.php?$location");
                     }
@@ -575,11 +572,11 @@ EOQ;
 
         global $current_user;
         if (is_admin($current_user)) {
-            if (!isset($_POST[$prefix.'portal_active'])) {
+            if (!isset($_POST[$prefix . 'portal_active'])) {
                 $focus->portal_active = '0';
             }
             //if no password is set set account to inactive for portal
-            if (empty($_POST[$prefix.'portal_name'])) {
+            if (empty($_POST[$prefix . 'portal_name'])) {
                 $focus->portal_active = '0';
             }
         }
@@ -601,7 +598,7 @@ EOQ;
             $email->load_relationship('contacts');
             $email->contacts->add($focus->id);
 
-            header("Location: index.php?&module=Emails&action=EditView&type=out&inbound_email_id=".$_REQUEST['inbound_email_id']."&parent_id=".$email->parent_id."&parent_type=".$email->parent_type.'&start='.$_REQUEST['start'].'&assigned_user_id='.$current_user->id);
+            header("Location: index.php?&module=Emails&action=EditView&type=out&inbound_email_id=" . $_REQUEST['inbound_email_id'] . "&parent_id=" . $email->parent_id . "&parent_type=" . $email->parent_type . '&start=' . $_REQUEST['start'] . '&assigned_user_id=' . $current_user->id);
             exit();
         }
         ////	END INBOUND EMAIL HANDLING
@@ -610,12 +607,14 @@ EOQ;
         $focus->save($check_notify);
         $return_id = $focus->id;
 
-        $GLOBALS['log']->debug("Saved record with id of ".$return_id);
+        $GLOBALS['log']->debug("Saved record with id of " . $return_id);
 
         if ($redirect && !empty($_POST['is_ajax_call']) && $_POST['is_ajax_call'] == '1') {
             $json = getJSONobj();
-            echo $json->encode(array('status' => 'success',
-                                 'get' => ''));
+            echo $json->encode(array(
+                'status' => 'success',
+                'get' => ''
+            ));
             $trackerManager = TrackerManager::getInstance();
             $timeStamp = TimeDate::getInstance()->nowDb();
             if ($monitor = $trackerManager->getMonitor('tracker')) {
@@ -633,10 +632,28 @@ EOQ;
             }
             return null;
         }
+        //["id"]=> string(36) "ba98f4c7-5410-d47f-17e9-6356b764eabc" ["name"]=> string(19) "Mr. ismail elgoufri" ["lead_source"]=> string(0) "" ["date_entered"]=> string(19) "2022-10-24 16:02:40" ["date_modified"]=> string(19) "2022-10-24 16:02:40" ["modified_user_id"]=> string(1) "1" ["assigned_user_id"]=> string(1) "1" ["created_by"]=> string(1) "1" ["created_by_name"]=> NULL ["modified_by_name"]=> string(5) "admin" ["description"]=> string(15) "test intgration" ["salutation"]=> string(3) "Mr." ["first_name"]=> string(6) "ismail" ["last_name"]=> string(8) "elgoufri" ["title"]=> string(10) "technicien" ["department"]=> string(2) "it" ["birthdate"]=> NULL ["reports_to_id"]=> string(0) "" ["do_not_call"]=> bool(false) ["phone_home"]=> NULL ["phone_mobile"]=> string(10) "0649297111" ["phone_work"]=> string(10) "0500000000" ["phone_other"]=> NULL ["phone_fax"]=> string(10) "0500000000" ["email1"]=> string(24) "elgoufriismail@gmail.com" ["email_and_name1"]=> NULL ["email_and_name2"]=> NULL ["email2"]=> NULL ["assistant"]=> NULL ["assistant_phone"]=> NULL ["email_opt_out"]=> string(1) "0" ["primary_address_street"]=> string(20) "monfleuri avenu oran" ["primary_address_city"]=> string(3) "fes" ["primary_address_state"]=> string(10) "fes-meknes" ["primary_address_postalcode"]=> string(4) "1122" ["primary_address_country"]=> string(5) "maroc" ["alt_address_street"]=> string(0) "" ["alt_address_city"]=> string(0) "" ["alt_address_state"]=> string(0) "" ["alt_address_postalcode"]=> string(0) "" ["alt_address_country"]=> string(0) "" ["portal_name"]=> NULL ["portal_app"]=> NULL ["portal_active"]=> string(1) "0" ["contacts_users_id"]=> NULL ["bug_id"]=> string(0) "" ["account_name"]=> string(0) "" ["account_id"]=> string(0) "" ["report_to_name"]=> string(0) "" ["opportunity_role"]=> NULL ["opportunity_rel_id"]=> NULL ["opportunity_id"]=> string(0) "" ["case_role"]=> NULL ["case_rel_id"]=> NULL ["case_id"]=> string(0) "" ["task_id"]=> NULL ["note_id"]=> NULL ["meeting_id"]=> NULL ["call_id"]=> NULL ["email_id"]=> string(0) "" ["assigned_user_name"]=> string(5) "admin" ["accept_status"]=> NULL ["accept_status_id"]=> NULL ["accept_status_name"]=> NULL ["alt_address_street_2"]=> NULL ["alt_address_street_3"]=> NULL ["opportunity_role_id"]=> NULL ["portal_password"]=> NULL ["primary_address_street_2"]=> NULL ["primary_address_street_3"]=> NULL ["campaign_id"]=> string(0) "" ["sync_contact"]=> NULL ["full_name"]=> string(19) "Mr. ismail elgoufri" ["invalid_email"]=> string(1) "0" ["table_name"]=> string(8) "contacts" ["rel_account_table"]=> string(17) "accounts_contacts" ["rel_opportunity_table"]=> string(22) "opportunities_contacts" ["object_name"]=> string(7) "Contact" ["module_dir"]=> string(8) "Contacts" ["new_schema"]=> bool(true) ["importable"]=> bool(true) ["additional_column_fields"]=> array(11) { [0]=> string(6) "bug_id" [1]=> string(18) "assigned_user_name" [2]=> string(12) "account_name" [3]=> string(10) "account_id" [4]=> string(14) "opportunity_id" [5]=> string(7) "case_id" [6]=> string(7) "task_id" [7]=> string(7) "note_id" [8]=> string(10) "meeting_id" [9]=> string(7) "call_id" [10]=> string(8) "email_id" } ["relationship_fields"]=> array(10) { ["account_id"]=> string(8) "accounts" ["bug_id"]=> string(4) "bugs" ["call_id"]=> string(5) "calls" ["case_id"]=> string(5) "cases" ["email_id"]=> string(6) "emails" ["meeting_id"]=> string(8) "meetings" ["note_id"]=> string(5) "notes" ["task_id"]=> string(5) "tasks" ["opportunity_id"]=> string(13) "opportunities" ["contacts_users_id"]=> string(9) "user_sync" } ["photo"]=> NULL ["lawful_basis"]=> NULL ["date_reviewed"]=> NULL ["lawful_basis_source"]=> NULL ["createLocaleFormattedName"]=> bool(true) ["email_addresses"]=> NULL ["emailAddress"]=> object(SugarEmailAddress) 56 (82) { ["tracker_visibility"]=> bool(false) ["table_name"]=> string(15) "email_addresses" ["module_name"]=> string(14) "EmailAddresses" ["module_dir"]=> string(14) "EmailAddresses" ["object_name"]=> string(12) "EmailAddress" ["regex"]=> string(117) "/^(?:['\.\-\+&#!$\*=\?\^_`\{\}~\/\w]+)@(?:(?:\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})|\w+(?:[\.-]*\w+)*(?:\.[\w-]{2,})+)$/" ["disable_custom_fields"]=> bool(true) ["db"]=> object(MysqliManager)#11 (26) { ["dbType"]=> string(5) "mysql" ["variant"]=> string(6) "mysqli" ["priority"]=> int(10) ["label"]=> string(10) "LBL_MYSQLI" ["backendFunctions":protected]=> array(4) { ["free_result"]=> string(18) "mysqli_free_result" ["close"]=> string(12) "mysqli_close" ["row_count"]=> string(15) "mysqli_num_rows" ["affected_row_count"]=> string(20) "mysqli_affected_rows" } ["dbName"]=> string(5)
+        $data = array(
+            array(
+                'firstname' => $focus->first_name,
+                'lastname'  => $focus->lase_name,
+                'position'  => $focus->title,
+                'title'     => $focus->department,
+                'email'     => $focus->email1,
+                'address1'  => $focus->primary_address_street,
+                'city'      => $focus->primary_address_city,
+                'ipAddress' => $_SERVER['REMOTE_ADDR']
+            )
+        );
+        $contact = $contactApi->createBatch($data);
+
+        //var_dump($focus);
 
         if ($redirect && isset($_POST['popup']) && $_POST['popup'] == 'true') {
-            $urlData = array("query" => true, "first_name" => $focus->first_name, "last_name" => $focus->last_name,
-           "module" => 'Accounts', 'action' => 'Popup');
+            $urlData = array(
+                "query" => true, "first_name" => $focus->first_name, "last_name" => $focus->last_name,
+                "module" => 'Accounts', 'action' => 'Popup'
+            );
             if (!empty($_POST['return_module'])) {
                 $urlData['module'] = $_POST['return_module'];
             }
@@ -648,7 +665,7 @@ EOQ;
                     $urlData[$var] = $_POST[$var];
                 }
             }
-            header("Location: index.php?".http_build_query($urlData));
+            header("Location: index.php?" . http_build_query($urlData));
             return;
         }
 
@@ -656,7 +673,7 @@ EOQ;
             $this->handleRedirect($return_id);
         } else {
             return $focus;
-        } */
+        }
     }
 
     public function handleRedirect($return_id)
