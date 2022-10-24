@@ -1,4 +1,8 @@
 <?php
+
+use Mautic\MauticApi;
+use Mautic\Auth\ApiAuth;
+
 if (!defined('sugarEntry') || !sugarEntry) {
     die('Not A Valid Entry Point');
 }
@@ -66,7 +70,7 @@ class ContactFormBase extends PersonFormBase
      * @param $prefix String value of prefix that may be present in $_POST variables
      * @return SQL String of the query that should be used for the initial duplicate lookup check
      */
-    public function getDuplicateQuery($focus, $prefix='')
+    public function getDuplicateQuery($focus, $prefix = '')
     {
         $query = 'SELECT contacts.id, contacts.first_name, contacts.last_name, contacts.title FROM contacts ';
 
@@ -74,20 +78,20 @@ class ContactFormBase extends PersonFormBase
         // add team security
 
         $query .= ' where contacts.deleted = 0 AND ';
-        if (isset($_POST[$prefix.'first_name']) && strlen($_POST[$prefix.'first_name']) != 0 && isset($_POST[$prefix.'last_name']) && strlen($_POST[$prefix.'last_name']) != 0) {
-            $query .= " contacts.first_name LIKE '". $_POST[$prefix.'first_name'] . "%' AND contacts.last_name = '". $_POST[$prefix.'last_name'] ."'";
+        if (isset($_POST[$prefix . 'first_name']) && strlen($_POST[$prefix . 'first_name']) != 0 && isset($_POST[$prefix . 'last_name']) && strlen($_POST[$prefix . 'last_name']) != 0) {
+            $query .= " contacts.first_name LIKE '" . $_POST[$prefix . 'first_name'] . "%' AND contacts.last_name = '" . $_POST[$prefix . 'last_name'] . "'";
         } else {
-            $query .= " contacts.last_name = '". $_POST[$prefix.'last_name'] ."'";
+            $query .= " contacts.last_name = '" . $_POST[$prefix . 'last_name'] . "'";
         }
 
-        if (!empty($_POST[$prefix.'record'])) {
-            $query .= " AND  contacts.id != '". $_POST[$prefix.'record'] ."'";
+        if (!empty($_POST[$prefix . 'record'])) {
+            $query .= " AND  contacts.id != '" . $_POST[$prefix . 'record'] . "'";
         }
         return $query;
     }
 
 
-    public function getWideFormBody($prefix, $mod='', $formname='', $contact = '', $portal = true)
+    public function getWideFormBody($prefix, $mod = '', $formname = '', $contact = '', $portal = true)
     {
         if (!ACLController::checkAccess('Contacts', 'edit', true)) {
             return '';
@@ -114,7 +118,7 @@ class ContactFormBase extends PersonFormBase
         $lbl_address =  $mod_strings['LBL_PRIMARY_ADDRESS'];
 
         if (isset($contact->assigned_user_id)) {
-            $user_id=$contact->assigned_user_id;
+            $user_id = $contact->assigned_user_id;
         } else {
             $user_id = $current_user->id;
         }
@@ -132,15 +136,15 @@ class ContactFormBase extends PersonFormBase
             $contact->email_opt_out = '';
         }
         $lbl_email_address = $mod_strings['LBL_EMAIL_ADDRESS'];
-        $salutation_options=get_select_options_with_id($app_list_strings['salutation_dom'], $contact->salutation);
+        $salutation_options = get_select_options_with_id($app_list_strings['salutation_dom'], $contact->salutation);
 
         if (isset($contact->lead_source)) {
-            $lead_source_options=get_select_options_with_id($app_list_strings['lead_source_dom'], $contact->lead_source);
+            $lead_source_options = get_select_options_with_id($app_list_strings['lead_source_dom'], $contact->lead_source);
         } else {
-            $lead_source_options=get_select_options_with_id($app_list_strings['lead_source_dom'], '');
+            $lead_source_options = get_select_options_with_id($app_list_strings['lead_source_dom'], '');
         }
 
-        $form="";
+        $form = "";
 
 
         if ($formname == 'ConvertProspect') {
@@ -155,7 +159,7 @@ class ContactFormBase extends PersonFormBase
         global $timedate;
         $birthdate = '';
         if (!empty($_REQUEST['birthdate'])) {
-            $birthdate=$_REQUEST['birthdate'];
+            $birthdate = $_REQUEST['birthdate'];
         }
 
 
@@ -236,7 +240,7 @@ class ContactFormBase extends PersonFormBase
 
 EOQ;
 
-        $form .= $sugarEmailAddress->getEmailAddressWidgetEditView($contact->id, $_REQUEST['action']=='ConvertLead'?'Leads':'Contacts', false, 'include/SugarEmailAddress/templates/forWideFormBodyView.tpl');
+        $form .= $sugarEmailAddress->getEmailAddressWidgetEditView($contact->id, $_REQUEST['action'] == 'ConvertLead' ? 'Leads' : 'Contacts', false, 'include/SugarEmailAddress/templates/forWideFormBodyView.tpl');
 
         require_once('include/SugarFields/Fields/Text/SugarFieldText.php');
         $sugarfield = new SugarFieldText('Text');
@@ -272,14 +276,14 @@ EOQ;
 
         if ($portal == true) {
             if (isset($contact->portal_name)) {
-                $form.="<input type='hidden' name='${prefix}portal_name'  value='{$contact->portal_name}'>";
+                $form .= "<input type='hidden' name='${prefix}portal_name'  value='{$contact->portal_name}'>";
             } else {
-                $form.="<input type='hidden' name='${prefix}portal_name'  value=''>";
+                $form .= "<input type='hidden' name='${prefix}portal_name'  value=''>";
             }
             if (isset($contact->portal_app)) {
-                $form.="<input type='hidden' name='${prefix}portal_app'  value='{$contact->portal_app}'>";
+                $form .= "<input type='hidden' name='${prefix}portal_app'  value='{$contact->portal_app}'>";
             } else {
-                $form.="<input type='hidden' name='${prefix}portal_app'  value=''>";
+                $form .= "<input type='hidden' name='${prefix}portal_app'  value=''>";
             }
 
 
@@ -288,12 +292,12 @@ EOQ;
             }
 
             if (isset($contact->portal_password)) {
-                $form.="<input type='password' name='${prefix}portal_password1'  value='{$contact->portal_password}'>";
-                $form.="<input type='password' name='${prefix}portal_password'  value='{$contact->portal_password}'>";
+                $form .= "<input type='password' name='${prefix}portal_password1'  value='{$contact->portal_password}'>";
+                $form .= "<input type='password' name='${prefix}portal_password'  value='{$contact->portal_password}'>";
                 $form .= "<input name='${prefix}old_portal_password' type='hidden' size='25'  value='{$contact->portal_password}' >";
             } else {
-                $form.="<input type='password' name='${prefix}portal_password1'  value=''>";
-                $form.="<input type='password' name='${prefix}portal_password'  value=''>";
+                $form .= "<input type='password' name='${prefix}portal_password1'  value=''>";
+                $form .= "<input type='password' name='${prefix}portal_password'  value=''>";
                 $form .= "<input name='${prefix}old_portal_password' type='hidden' size='25'  value='' >";
             }
         }
@@ -315,14 +319,14 @@ EOQ;
         $javascript->addField('email2', 'false', $prefix);
         $javascript->addRequiredFields($prefix);
 
-        $form .=$javascript->getScript();
+        $form .= $javascript->getScript();
         $mod_strings = $temp_strings;
 
 
         return $form;
     }
 
-    public function getFormBody($prefix, $mod='', $formname='')
+    public function getFormBody($prefix, $mod = '', $formname = '')
     {
         if (!ACLController::checkAccess('Contacts', 'edit', true)) {
             return '';
@@ -379,11 +383,11 @@ EOQ;
         $javascript->addField('email1', 'false', $prefix);
         $javascript->addRequiredFields($prefix);
 
-        $form .=$javascript->getScript();
+        $form .= $javascript->getScript();
         $mod_strings = $temp_strings;
         return $form;
     }
-    public function getForm($prefix, $mod='')
+    public function getForm($prefix, $mod = '')
     {
         if (!ACLController::checkAccess('Contacts', 'edit', true)) {
             return '';
@@ -421,7 +425,7 @@ EOQ;
     }
 
 
-    public function handleSave($prefix, $redirect=true, $useRequired=false)
+    public function handleSave($prefix, $redirect = true, $useRequired = false)
     {
         global $theme, $current_user;
 
@@ -430,10 +434,24 @@ EOQ;
 
         require_once('include/formbase.php');
 
+        $settings = [
+            'userName'   => 'admin',             // Create a new user       
+            'password'   => 'Bridges@2017',             // Make it a secure password
+        ];
+        $initAuth = new ApiAuth();
+        $auth     = $initAuth->newAuth($settings, 'BasicAuth');
+
+        $api        = new MauticApi();
+        $apiUrl = "https://mautic.your-bridges.com/api";
+        $contactApi = $api->newApi('contacts', $auth, $apiUrl);
+        $contacts = $contactApi->getList();
+        var_dump($contacts);
+        /*
         global $timedate;
 
         $focus = $this->getContact();
-
+        
+         
         if ($useRequired &&  !checkRequired($prefix, array_keys($focus->required_fields))) {
             return null;
         }
@@ -638,7 +656,7 @@ EOQ;
             $this->handleRedirect($return_id);
         } else {
             return $focus;
-        }
+        } */
     }
 
     public function handleRedirect($return_id)
@@ -671,19 +689,19 @@ EOQ;
         //eggsurplus Bug 23816: maintain VCR after an edit/save. If it is a duplicate then don't worry about it. The offset is now worthless.
         $redirect_url = "index.php?action=$return_action&module=$return_module&record=$return_id";
         if (isset($_REQUEST['offset']) && empty($_REQUEST['duplicateSave'])) {
-            $redirect_url .= "&offset=".$_REQUEST['offset'];
+            $redirect_url .= "&offset=" . $_REQUEST['offset'];
         }
 
         if (!empty($_REQUEST['ajax_load'])) {
             echo "<script>SUGAR.ajaxUI.loadContent('$redirect_url');</script>\n";
         } else {
-            header("Location: ". $redirect_url);
+            header("Location: " . $redirect_url);
         }
     }
 
     /**
-    * @return Contact
-    */
+     * @return Contact
+     */
     protected function getContact()
     {
         return BeanFactory::newBean('Contacts');
